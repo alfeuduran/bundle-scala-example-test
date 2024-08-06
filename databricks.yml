@@ -1,0 +1,30 @@
+#  https://github.com/databricks/cli/pull/1591
+bundle:
+  name: spark-scala-project
+include:
+  - resources/*.yml
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://adb-Y.17.azuredatabricks.net/
+      root_path: /Workspace/Users/alfeu.duran@databricks.com/Projects/${bundle.name}/${bundle.target}
+      artifact_path: /Volumes/dev/default/jarfiles
+
+    artifacts:
+      my_java_code:
+#        this is the maven location
+        path: ./
+        build: "mvn clean && mvn package"
+        files:
+          - source: ./target/spark-test-scala-1.0-SNAPSHOT-jar-with-dependencies.jar
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-X.3.azuredatabricks.net/
+      root_path: /Workspace/Users/alfeu.duran@databricks.com/Projects/${bundle.name}/${bundle.target}
+
+
+sync:
+  include:
+    - "target/"
